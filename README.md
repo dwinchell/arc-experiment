@@ -2,34 +2,39 @@
 https://github.com/some-natalie/kubernoodles/tree/v0.9.6/openshift
 https://github.com/some-natalie/kubernoodles/blob/v0.9.6/docs/admin-setup.md
 
-# Running through admin-setup.md
+# Instructions
 
-Step 1 - Install Helm
-Do it.
+## Walkthrough of Kubernoodles Instructions
 
-Step 2 - Install cert-manager
-Install the cert-manager operator in openshift instead of doing these instructions
-# Didn't work to get cert-manager working
-#oc adm policy add-scc-to-group anyuid cert-manager -n cert-manager
+These are based on [admin-setup.md](https://github.com/dwinchell/arc-experiment), with differences and additions noted
 
-Step 3 - ARC
-Set the helm repo and run the playbook per instructions
+### Step 1 - Install Helm
+Follow kubernoodles instructions.
 
-Step 4 - GHES url skipped for test
+### Step 2 - Install cert-manager
+Install the cert-manager operator in openshift instead of doing these instructions. The reason is that the install method from kubernoodles wanted anyuid for cert-manager.
+
+**Note:** The operator is in Tech Preview. We should assess if that's acceptable for now, but it's better than anyuid. Also, anyuid was not enough. It still had some error about seccomp.
+
+### Step 3 - Install ARC
+Follow kubernoodles instructions.
+
+### Step 4 - Set GitHub URL
 kubectl set env deploy actions-runner-controller -c manager GITHUB_ENTERPRISE_URL=https://api.github.com/ --namespace actions-runner-system
 
-Step 5 - Generate oand configure PAT
+### Step 5 - Generate and configure PAT
 kubectl create secret generic controller-manager -n actions-runner-system --from-literal=github_token=FILL_THIS_IN
+**Note:** This will be an application token in the disconnected environment.
 
-Step 6 - Runner Deployment
+### Step 6 - Runner Deployment
 oc new-project runners
-kubectl create -f https://raw.githubusercontent.com/some-natalie/kubernoodles/v0.9.6/deployments/podman.yml
+Download https://raw.githubusercontent.com/some-natalie/kubernoodles/v0.9.6/deployments/podman.yml, renamed to dwinchell-runnerdeployment.yaml in example
+Customize  dwinchell-runnerdeployment.yaml .spec.repository to name of repo (dwinchell/arc-experiment or whatever). there is probably a way to do this for multiple repos
 oc get runnerdeployment
-	not oc get deployment ... it won't show up because we created a CRD!
-customize  runnerdeployment.yaml .spec.repository to name of repo (dwinchell/arc-experiment or whatever). there is probably a way to do this for multiple repos
+Don't run `oc get deployment` ... it won't show up because we created a CRD!
 
 
-## Step 7 - Add SCCs for privliged containers :(
+### Step 7 - Add SCCs for privliged containers :(
 
 oc adm policy add-scc-to-user privileged -z default -n actions-runner-system
 oc adm policy add-scc-to-user privileged -z 
@@ -37,7 +42,7 @@ oc adm policy add-scc-to-user privileged -z
 Error here if you don't do this. See toubleshooting section
 oc logs -n actions-runner-system actions-runner-controller-58ddc6d859-c6fg4 -c manager
 
-## Step 8 - Fix PVC error
+### Step 8 - Fix PVC error
 
 oc get event -n runners
 ```
@@ -114,7 +119,7 @@ Pod scheduled, didn't manage to attach the pv
 ... Dan is doing some kind of work regarding the tools cache and may have solved this or decided it's OBE
 ... talk to him about it Monday
 
-## Step 7 - fix rate limiting auth error
+### Step 7 - fix rate limiting auth error
 Http response code: Forbidden from 'POST https://api.github.com/api/v3/actions/runner-registration'
 {"message":"API rate limit exceeded for 137.135.122.226. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}
 
