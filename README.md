@@ -127,7 +127,7 @@ Http response code: Forbidden from 'POST https://api.github.com/api/v3/actions/r
 ... also can decreas replicas to 1
 
 
-Requirements to get it running inside environment:
+# TODO List for Next Environment
 1. Get cert-manager running, probably w/ the same cert-manager operator we were trying before. When I tried instructions from kubernoodles readme, i got a permissions error. Tried giving it anyuid, still got a seccomp error. Note, kubernoodles expects version v1.10.0. Version of the operator is 1.7.1-1 ... which may or may not be the installed version of cert-manager.
 2. Do whatever setup kubernoodles needs of our cert-manager deployment
 3. add helm repo for ARC
@@ -140,18 +140,6 @@ Requirements to get it running inside environment:
 10. Figure out *IF* and why ARC default SA needs privileged SCC and if there's a way to make it not need that. (Added it, didn't fix, added runner scc, worked, didn't go back and test w/out controllser SCC ... but probably do need it since it's mentioned in the docs)
 11. Figureout why runner namespace default AE needs privileged SCC and if there's a way to make it not need that
 12. Pin version of base image in RunnerDeployment (no :latest)
-
-
-
-
-
-
-1. Get the application URL by running these commands:
-  export POD_NAME=$(kubectl get pods --namespace actions-runner-system -l "app.kubernetes.io/name=actions-runner-controller,app.kubernetes.io/instance=actions-runner-controller" -o jsonpath="{.items[0].metadata.name}")
-  export CONTAINER_PORT=$(kubectl get pod --namespace actions-runner-system $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
-  echo "Visit http://127.0.0.1:8080 to use your application"
-  kubectl --namespace actions-runner-system port-forward $POD_NAME 8080:$CONTAINER_PORT
-[dillon@desktop-rhel8 code]$ 
 
 # Troubleshooting
 If you get the error below, it's because an SA (controller or runner, probably default in taht namespace), needs privileged SCC. Fix with commands below (and then find a way to not have to do this)
