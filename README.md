@@ -128,6 +128,15 @@ Http response code: Forbidden from 'POST https://api.github.com/api/v3/actions/r
 
 
 # TODO List for Next Environment
+
+## Caveats
+There may be some additional steps because:
+1. I was using github.com
+2. I was using a PAT instead of an application
+3. I disabled the tools cache for now because I was getting an error mounting the volumes. I was using Azure Files/ARO so we'll have to work through that.
+4. I hit a rate limiting error before actually connecting. There may be a couple more steps afterward.
+
+# TODO
 1. Get cert-manager running, probably w/ the same cert-manager operator we were trying before. When I tried instructions from kubernoodles readme, i got a permissions error. Tried giving it anyuid, still got a seccomp error. Note, kubernoodles expects version v1.10.0. Version of the operator is 1.7.1-1 ... which may or may not be the installed version of cert-manager.
 2. Do whatever setup kubernoodles needs of our cert-manager deployment
 3. add helm repo for ARC
