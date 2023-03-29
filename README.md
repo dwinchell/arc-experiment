@@ -142,8 +142,9 @@ There may be some additional steps because:
 3. add helm repo for ARC
 4. Create GitOps app for ARC helm chart
 5. Create new GHES PAT for ARC to use. admin:enterprise scope only is used by default in kubernoodels readme (i.e. make it available enterprise wide). I used a personal PAT for a test repo.
-6. Build and host runner images internally
-7. Make deployment run rootless
+6. Mirror controller image(s) into disconnected environment
+7. Mirror runner image(s) into disconnected environment
+8. Make deployment run rootless
 8. Add our tools to our chosen base image
 9. Ideally, swap in the ubi base image for fedora by editing the kubernoodels example base images
 10. Figure out *IF* and why ARC default SA needs privileged SCC and if there's a way to make it not need that. (Added it, didn't fix, added runner scc, worked, didn't go back and test w/out controllser SCC ... but probably do need it since it's mentioned in the docs)
