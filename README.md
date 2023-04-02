@@ -11,7 +11,10 @@ https://github.com/some-natalie/kubernoodles/blob/v0.9.6/docs/admin-setup.md
 These are based on [admin-setup.md]([https://github.com/dwinchell/arc-experiment)](https://github.com/some-natalie/kubernoodles/blob/v0.9.6/docs/admin-setup.md), with differences and additions noted
 
 ### Step 1 - Install Helm
-Follow kubernoodles instructions.
+```
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+sudo bash get_helm.sh
+```
 
 ### Step 2 - Install cert-manager
 Install the cert-manager operator in openshift instead of doing these instructions. The reason is that the install method from kubernoodles wanted anyuid for cert-manager.
@@ -23,7 +26,12 @@ oc create -f cert-manager-subscription.yaml
 **Note:** The operator is in Tech Preview. We should assess if that's acceptable for now, but it's better than anyuid. Also, anyuid was not enough. It still had some error about seccomp.
 
 ### Step 3 - Install ARC
-Follow kubernoodles instructions.
+```
+kubectl create namespace actions-runner-system
+helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller
+helm repo update
+helm install -n actions-runner-system actions-runner-controller actions-runner-controller/actions-runner-controller --version=0.21.1
+```
 
 ### Step 4 - Set GitHub URL
 Change the URL in the command below to the GHES url and run.
@@ -52,9 +60,6 @@ oc adm policy add-scc-to-user privileged -z default -n actions-runner-system
 oc adm policy add-scc-to-user privileged -z default -n runners
 oc adm policy add-scc-to-user privileged -z default -n test-runners
 ```
-
-Error here if you don't do this. See toubleshooting section
-oc logs -n actions-runner-system actions-runner-controller-58ddc6d859-c6fg4 -c manager
 
 ### Step 8 - Fix PVC error
 
