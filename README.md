@@ -133,14 +133,6 @@ Pod scheduled, didn't manage to attach the pv
 ... Dan is doing some kind of work regarding the tools cache and may have solved this or decided it's OBE
 ... talk to him about it Monday
 
-### Step 7 - fix rate limiting auth error
-Http response code: Forbidden from 'POST https://api.github.com/api/v3/actions/runner-registration'
-{"message":"API rate limit exceeded for 137.135.122.226. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}
-
-... Runners might have incorrect auth configuration .... i had another error before a PAT ...
-... also can decreas replicas to 1
-
-
 # TODO List for Next Environment
 
 ## Caveats
