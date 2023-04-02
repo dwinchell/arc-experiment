@@ -35,9 +35,11 @@ Don't run `oc get deployment` ... it won't show up because we created a CRD!
 
 
 ### Step 7 - Add SCCs for privliged containers :(
-
+```
 oc adm policy add-scc-to-user privileged -z default -n actions-runner-system
-oc adm policy add-scc-to-user privileged -z 
+oc adm policy add-scc-to-user privileged -z default -n runners
+oc adm policy add-scc-to-user privileged -z default -n test-runners
+```
 
 Error here if you don't do this. See toubleshooting section
 oc logs -n actions-runner-system actions-runner-controller-58ddc6d859-c6fg4 -c manager
