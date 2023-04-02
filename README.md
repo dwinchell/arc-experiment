@@ -146,14 +146,13 @@ There may be some additional steps because:
 4. I hit a rate limiting error before actually connecting. There may be a couple more steps afterward.
 
 ## TODO
-1. Get cert-manager running, probably w/ the same cert-manager operator we were trying before. When I tried instructions from kubernoodles readme, i got a permissions error. Tried giving it anyuid, still got a seccomp error. Note, kubernoodles expects version v1.10.0. Version of the operator is 1.7.1-1 ... which may or may not be the installed version of cert-manager.
-2. Do whatever setup kubernoodles needs of our cert-manager deployment
-3. add helm repo for ARC
-4. Create GitOps app for ARC helm chart
-5. Create new GHES PAT for ARC to use. admin:enterprise scope only is used by default in kubernoodels readme (i.e. make it available enterprise wide). I used a personal PAT for a test repo.
-6. Mirror controller image(s) into disconnected environment
-7. Mirror runner image(s) into disconnected environment
-8. Make deployment run rootless
+1. Mirror Red Hat version (not the community version) of cert-manager into our environment. Tested with version 1.10.2 of the operator ... the version scheme of the operator has apparently changed to match the upstream cert-manager versioning scheme.
+2. add helm repo for ARC
+3. Create GitOps app for ARC helm chart
+4. Create new GHES PAT for ARC to use. admin:enterprise scope only is used by default in kubernoodels readme (i.e. make it available enterprise wide). I used a personal PAT for a test repo.
+5. Mirror controller image(s) into disconnected environment
+6. Mirror runner image(s) into disconnected environment
+7. Make deployment run rootless
 8. Add our tools to our chosen base image
 9. Ideally, swap in the ubi base image for fedora by editing the kubernoodels example base images
 10. Figure out *IF* and why ARC default SA needs privileged SCC and if there's a way to make it not need that. (Added it, didn't fix, added runner scc, worked, didn't go back and test w/out controllser SCC ... but probably do need it since it's mentioned in the docs)
@@ -163,13 +162,13 @@ There may be some additional steps because:
 # Troubleshooting
 If you get the error below, it's because an SA (controller or runner, probably default in taht namespace), needs privileged SCC. Fix with commands below (and then find a way to not have to do this)
 
-oc adm policy add-scc-to-user privileged -z default -n actions-runner-system
-oc adm policy add-scc-to-user privileged -z default -n runners
-
-
 ```
 2023-03-25T01:30:57Z	ERROR	Reconciler error	{"controller": "runner-controller", "controllerGroup": "actions.summerwind.dev", "controllerKind": "Runner", "runner": {"name":"podman-rft2m-z592m","namespace":"runners"}, "namespace": "runners", "name": "podman-rft2m-z592m", "reconcileID": "a21ad838-294e-4265-b58f-3f3ddf3e0e19", "error": "pods \"podman-rft2m-z592m\" is forbidden: unable to validate against any security context constraint: [provider \"anyuid\": Forbidden: not usable by user or serviceaccount, spec.containers[0].securityContext.runAsUser: Invalid value: 1000: must be in the ranges: [1000730000, 1000739999], spec.containers[0].securityContext.privileged: Invalid value: true: Privileged containers are not allowed, provider \"nonroot\": Forbidden: not usable by user or serviceaccount, provider \"hostmount-anyuid\": Forbidden: not usable by user or serviceaccount, provider \"machine-api-termination-handler\": Forbidden: not usable by user or serviceaccount, provider \"hostnetwork\": Forbidden: not usable by user or serviceaccount, provider \"hostaccess\": Forbidden: not usable by user or serviceaccount, provider \"node-exporter\": Forbidden: not usable by user or serviceaccount, provider \"privileged\": Forbidden: not usable by user or serviceaccount, provider \"privileged-genevalogging\": Forbidden: not usable by user or serviceaccount]"}
 ```
 
-^ That error shows up with this command
-oc logs -n actions-runner-system actions-runner-controller-58ddc6d859-c6fg4 -c manager
+Fix with:
+```
+oc adm policy add-scc-to-user privileged -z default -n actions-runner-system
+oc adm policy add-scc-to-user privileged -z default -n runners
+oc adm policy add-scc-to-user privileged -z default -n test-runners
+```
