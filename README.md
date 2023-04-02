@@ -16,16 +16,26 @@ Follow kubernoodles instructions.
 ### Step 2 - Install cert-manager
 Install the cert-manager operator in openshift instead of doing these instructions. The reason is that the install method from kubernoodles wanted anyuid for cert-manager.
 
+```
+oc create -f cert-manager-subscription.yaml
+```
+
 **Note:** The operator is in Tech Preview. We should assess if that's acceptable for now, but it's better than anyuid. Also, anyuid was not enough. It still had some error about seccomp.
 
 ### Step 3 - Install ARC
 Follow kubernoodles instructions.
 
 ### Step 4 - Set GitHub URL
+Change the URL in the command below to the GHES url and run.
+
+```
 kubectl set env deploy actions-runner-controller -c manager GITHUB_ENTERPRISE_URL=https://api.github.com/ --namespace actions-runner-system
+```
 
 ### Step 5 - Generate and configure PAT
+```
 kubectl create secret generic controller-manager -n actions-runner-system --from-literal=github_token=FILL_THIS_IN
+```
 **Note:** This will be an application token in the disconnected environment.
 
 ### Step 6 - Runner Deployment
