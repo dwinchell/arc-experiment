@@ -147,8 +147,8 @@ There may be some additional steps because:
 
 ## TODO
 1. Mirror Red Hat version (not the community version) of cert-manager into our environment. Tested with version 1.10.2 of the operator ... the version scheme of the operator has apparently changed to match the upstream cert-manager versioning scheme.
-2. add helm repo for ARC
-3. Create GitOps app for ARC helm chart
+2. Mirror in the helm repo for ARC
+3. Create GitOps app to use for ARC helm chart
 4. Create new GHES PAT for ARC to use. admin:enterprise scope only is used by default in kubernoodels readme (i.e. make it available enterprise wide). I used a personal PAT for a test repo.
 5. Mirror controller image(s) into disconnected environment
 6. Mirror runner image(s) into disconnected environment
@@ -158,6 +158,7 @@ There may be some additional steps because:
 10. Figure out *IF* and why ARC default SA needs privileged SCC and if there's a way to make it not need that. (Added it, didn't fix, added runner scc, worked, didn't go back and test w/out controllser SCC ... but probably do need it since it's mentioned in the docs)
 11. Figureout why runner namespace default AE needs privileged SCC and if there's a way to make it not need that
 12. Pin version of base image in RunnerDeployment (no :latest)
+13. Uncomment the volumes and volumeMounts in the RunnerDeployment and troubleshoot why they failed to attach correctly. Possibly some nuance with the azure files storage class.
 
 # Troubleshooting
 If you get the error below, it's because an SA (controller or runner, probably default in taht namespace), needs privileged SCC. Fix with commands below (and then find a way to not have to do this)
