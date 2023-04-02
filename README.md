@@ -46,19 +46,17 @@ kubectl create secret generic controller-manager -n actions-runner-system --from
 ```
 **Note:** This will be an application token in the disconnected environment.
 
-### Step 6 - Runner Deployment
-oc new-project runners
-Download https://raw.githubusercontent.com/some-natalie/kubernoodles/v0.9.6/deployments/podman.yml, renamed to dwinchell-runnerdeployment.yaml in example
-Customize  dwinchell-runnerdeployment.yaml .spec.repository to name of repo (dwinchell/arc-experiment or whatever). there is probably a way to do this for multiple repos
-oc get runnerdeployment
-Don't run `oc get deployment` ... it won't show up because we created a CRD!
-
-
-### Step 7 - Add SCCs for privliged containers :(
+### Step 6 - Add SCCs for privliged containers :(
 ```
 oc adm policy add-scc-to-user privileged -z default -n actions-runner-system
 oc adm policy add-scc-to-user privileged -z default -n runners
 oc adm policy add-scc-to-user privileged -z default -n test-runners
+```
+
+### Step 7 - Runner Deployment
+```
+oc new-project runners
+oc create -f podman.yaml
 ```
 
 ### Step 8 - Fix PVC error
