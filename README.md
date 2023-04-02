@@ -59,7 +59,32 @@ oc new-project runners
 oc create -f podman.yaml
 ```
 
-### Step 8 - Fix PVC error
+
+# TODO List for Next Environment
+
+## Caveats
+There may be some additional steps because:
+1. I was using github.com
+2. I was using a PAT instead of an application
+3. I disabled the tools cache for now because I was getting an error mounting the volumes. I was using Azure Files/ARO so we'll have to work through that.
+4. I hit a rate limiting error before actually connecting. There may be a couple more steps afterward.
+
+## TODO
+1. Mirror Red Hat version (not the community version) of cert-manager into our environment. Tested with version 1.10.2 of the operator ... the version scheme of the operator has apparently changed to match the upstream cert-manager versioning scheme.
+2. Mirror in the helm repo for ARC
+3. Create GitOps app to use for ARC helm chart
+4. Create new GHES PAT for ARC to use. admin:enterprise scope only is used by default in kubernoodels readme (i.e. make it available enterprise wide). I used a personal PAT for a test repo.
+5. Mirror controller image(s) into disconnected environment
+6. Mirror runner image(s) into disconnected environment
+7. Make deployment run rootless
+8. Add our tools to our chosen base image
+9. Ideally, swap in the ubi base image for fedora by editing the kubernoodels example base images
+10. Figure out *IF* and why ARC default SA needs privileged SCC and if there's a way to make it not need that. (Added it, didn't fix, added runner scc, worked, didn't go back and test w/out controllser SCC ... but probably do need it since it's mentioned in the docs)
+11. Figureout why runner namespace default AE needs privileged SCC and if there's a way to make it not need that
+12. Pin version of base image in RunnerDeployment (no :latest)
+13. Enable and fix the cache by uncommenting the volume/volumeClaim in the RunnerDeployment in podman.yaml. See Troubleshooting section below for notes.
+
+# Notes on the Cache PVC Error
 
 oc get event -n runners
 ```
@@ -136,31 +161,9 @@ Pod scheduled, didn't manage to attach the pv
 ... Dan is doing some kind of work regarding the tools cache and may have solved this or decided it's OBE
 ... talk to him about it Monday
 
-# TODO List for Next Environment
-
-## Caveats
-There may be some additional steps because:
-1. I was using github.com
-2. I was using a PAT instead of an application
-3. I disabled the tools cache for now because I was getting an error mounting the volumes. I was using Azure Files/ARO so we'll have to work through that.
-4. I hit a rate limiting error before actually connecting. There may be a couple more steps afterward.
-
-## TODO
-1. Mirror Red Hat version (not the community version) of cert-manager into our environment. Tested with version 1.10.2 of the operator ... the version scheme of the operator has apparently changed to match the upstream cert-manager versioning scheme.
-2. Mirror in the helm repo for ARC
-3. Create GitOps app to use for ARC helm chart
-4. Create new GHES PAT for ARC to use. admin:enterprise scope only is used by default in kubernoodels readme (i.e. make it available enterprise wide). I used a personal PAT for a test repo.
-5. Mirror controller image(s) into disconnected environment
-6. Mirror runner image(s) into disconnected environment
-7. Make deployment run rootless
-8. Add our tools to our chosen base image
-9. Ideally, swap in the ubi base image for fedora by editing the kubernoodels example base images
-10. Figure out *IF* and why ARC default SA needs privileged SCC and if there's a way to make it not need that. (Added it, didn't fix, added runner scc, worked, didn't go back and test w/out controllser SCC ... but probably do need it since it's mentioned in the docs)
-11. Figureout why runner namespace default AE needs privileged SCC and if there's a way to make it not need that
-12. Pin version of base image in RunnerDeployment (no :latest)
-13. Uncomment the volumes and volumeMounts in the RunnerDeployment and troubleshoot why they failed to attach correctly. Possibly some nuance with the azure files storage class.
-
 # Troubleshooting
+
+## Error when Running without anyuid
 If you get the error below, it's because an SA (controller or runner, probably default in taht namespace), needs privileged SCC. Fix with commands below (and then find a way to not have to do this)
 
 ```
