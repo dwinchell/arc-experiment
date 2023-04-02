@@ -2,11 +2,13 @@
 https://github.com/some-natalie/kubernoodles/tree/v0.9.6/openshift
 https://github.com/some-natalie/kubernoodles/blob/v0.9.6/docs/admin-setup.md
 
+**Important:** This is based on v0.9.6 of kubernoodles. Please use the link to the proper tag. The main branch may not work correctly with GHES due to changes in the API (untested).
+
 # Instructions
 
 ## Walkthrough of Kubernoodles Instructions
 
-These are based on [admin-setup.md](https://github.com/dwinchell/arc-experiment), with differences and additions noted
+These are based on [admin-setup.md]([https://github.com/dwinchell/arc-experiment)](https://github.com/some-natalie/kubernoodles/blob/v0.9.6/docs/admin-setup.md), with differences and additions noted
 
 ### Step 1 - Install Helm
 Follow kubernoodles instructions.
