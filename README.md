@@ -7,11 +7,15 @@ https://github.com/some-natalie/kubernoodles/blob/v0.9.6/docs/admin-setup.md
 # Known Issues
 1. The current instructions result in a runner that never connects correctly to GitHub.com. The runner version in podman:latest is too old because the kubernoodles project has moved on to a UBI8 based image. The newer ubi8 runner image may be incompatible with GHES but I haven't tested it yet.
 
+
 # Instructions
 
 ## Prerequisites
+* Helm
 
-### Install Helm
+## Instructions (from Kubernoodles)
+
+These are based on [admin-setup.md]([https://github.com/dwinchell/arc-experiment)](https://github.com/some-natalie/kubernoodles/blob/v0.9.6/docs/admin-setup.md), with differences and additions noted
 
 ### Step 0 - Re-build the runner image
 
@@ -24,13 +28,6 @@ touch images/.env
 podman build -t podman-runner -f images/podman.Dockerfile .
 ... TODO: push to the registry and configure the runner deployment to use it ...
 ```
-
-### Step 1 - Install Helm
-(Covered in prereqs)
-
-## Instructions (from Kubernoodles)
-
-These are based on [admin-setup.md]([https://github.com/dwinchell/arc-experiment)](https://github.com/some-natalie/kubernoodles/blob/v0.9.6/docs/admin-setup.md), with differences and additions noted
 
 ### Step 1
 (Covered in preqreqs)
