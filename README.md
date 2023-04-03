@@ -6,15 +6,20 @@ https://github.com/some-natalie/kubernoodles/blob/v0.9.6/docs/admin-setup.md
 
 # Instructions
 
-## Walkthrough of Kubernoodles Instructions
+## Prerequisites
 
-These are based on [admin-setup.md]([https://github.com/dwinchell/arc-experiment)](https://github.com/some-natalie/kubernoodles/blob/v0.9.6/docs/admin-setup.md), with differences and additions noted
-
-### Step 1 - Install Helm
+### Install Helm
 ```
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
 sudo bash get_helm.sh
 ```
+
+## Instructions (from Kubernoodles)
+
+These are based on [admin-setup.md]([https://github.com/dwinchell/arc-experiment)](https://github.com/some-natalie/kubernoodles/blob/v0.9.6/docs/admin-setup.md), with differences and additions noted
+
+### Step 1
+(Covered in preqreqs)
 
 ### Step 2 - Install cert-manager
 Install the cert-manager operator in openshift instead of doing these instructions. The reason is that the install method from kubernoodles wanted anyuid for cert-manager.
@@ -46,7 +51,8 @@ kubectl create secret generic controller-manager -n actions-runner-system --from
 ```
 **Note:** This will be an application token in the disconnected environment.
 
-### Step 6 - Add SCCs for privliged containers :(
+### Step 6 - Add SCCs for privliged containers
+This is bad. There is a task in the TODO section below to make it unnecessary.
 ```
 oc adm policy add-scc-to-user privileged -z default -n actions-runner-system
 oc adm policy add-scc-to-user privileged -z default -n runners
@@ -58,7 +64,6 @@ oc adm policy add-scc-to-user privileged -z default -n test-runners
 oc new-project runners
 oc create -f podman.yaml
 ```
-
 
 # TODO List for Next Environment
 
@@ -76,11 +81,11 @@ There may be some additional steps because:
 4. Create new GHES PAT for ARC to use. admin:enterprise scope only is used by default in kubernoodels readme (i.e. make it available enterprise wide). I used a personal PAT for a test repo.
 5. Mirror controller image(s) into disconnected environment
 6. Mirror runner image(s) into disconnected environment
-7. Make deployment run rootless
+7. Make controller and runner deployments run without privilged scc
 8. Add our tools to our chosen base image
 9. Ideally, swap in the ubi base image for fedora by editing the kubernoodels example base images
 10. Figure out *IF* and why ARC default SA needs privileged SCC and if there's a way to make it not need that. (Added it, didn't fix, added runner scc, worked, didn't go back and test w/out controllser SCC ... but probably do need it since it's mentioned in the docs)
-11. Figureout why runner namespace default AE needs privileged SCC and if there's a way to make it not need that
+11. Figure out why runner namespace default AE needs privileged SCC and if there's a way to make it not need that
 12. Pin version of base image in RunnerDeployment (no :latest)
 13. Enable and fix the cache by uncommenting the volume/volumeClaim in the RunnerDeployment in podman.yaml. See Troubleshooting section below for notes.
 
