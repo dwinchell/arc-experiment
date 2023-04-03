@@ -12,10 +12,21 @@ https://github.com/some-natalie/kubernoodles/blob/v0.9.6/docs/admin-setup.md
 ## Prerequisites
 
 ### Install Helm
+
+### Step 0 - Re-build the runner image
+
+The image used in the kubernoodles instructions has an out of date version of the github runner binary. Rebuild to specify a newer version.
+
 ```
-curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-sudo bash get_helm.sh
+git clone git@github.com:some-natalie/kubernoodles.git
+cd kubernoodles/
+touch images/.env
+podman build -t podman-runner -f images/podman.Dockerfile .
+... TODO: push to the registry and configure the runner deployment to use it ...
 ```
+
+### Step 1 - Install Helm
+(Covered in prereqs)
 
 ## Instructions (from Kubernoodles)
 
