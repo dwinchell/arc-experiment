@@ -5,7 +5,7 @@ https://github.com/some-natalie/kubernoodles/blob/v0.9.6/docs/admin-setup.md
 **Important:** This is based on v0.9.6 of kubernoodles. Please use the link to the proper tag. The main branch may not work correctly with GHES due to changes in the API (untested).
 
 # Known Issues
-1. The current instructions result in a runner that never connects correctly to GitHub.com. The runner version in podman:latest is too old because the kubernoodles project has moved on to a UBI8 based image. It's unclear whether that is compatible with the GHES api version. It's *not* compatible with the podman.yaml included in this repo, and a brief attempt to update that yaml didn't work. The main branch version of kubernoodles installs the ubi8 deployment using Helm.
+1. The current instructions result in a runner that never connects correctly to GitHub.com. The runner version in podman:latest is too old because the kubernoodles project has moved on to a UBI8 based image. The newer ubi8 runner image may be incompatible with GHES but I haven't tested it yet.
 
 # Instructions
 
